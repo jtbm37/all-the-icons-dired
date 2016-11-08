@@ -1,6 +1,6 @@
 ;;; all-the-icons-dired.el --- Shows icons for each file in dired mode  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  matrix
+;; Copyright (C) 2016  jtbm37
 
 ;; Author: jtbm37
 ;; Keywords: icons, dired
@@ -20,7 +20,9 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
+;; To install, add this to your init.el
+;; (add-to-load-path (expand-file-name "~/path/to/all-the-icons-dired"))
+;; (load "all-the-icons-dired.el")
 
 ;;; Code:
 (require 'dired)
