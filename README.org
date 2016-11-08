@@ -1,0 +1,28 @@
+#+TITLE:	all-the-icons-dired
+#+AUTHOR:	jtbm37
+#+DATE:		2016-11-08
+
+This adds dired support to [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
+
+** Prerequisites
+
+   Install =all-the-icons= from melpa.
+
+** Installation
+
+   1) Clone the repo
+
+   2) Add the cloned repo path to your load path
+
+   #+BEGIN_SRC elisp
+	(add-to-load-path (expand-file-name "~/path/to/all-the-icons-dired"))
+	(load "all-the-icons-dired.el")
+   #+END_SRC
+
+** Configuration
+
+*** Directory face
+    =all-the-icons-dired-dir-face= can be customized for the directory icon.
+
+*** File face
+    Each file face is already predefined by =all-the-icons=
