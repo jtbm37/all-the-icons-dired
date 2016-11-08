@@ -1,6 +1,7 @@
 #+TITLE:	all-the-icons-dired
 #+AUTHOR:	jtbm37
 #+DATE:		2016-11-08
+[[file:logo.png]]
 
 This adds dired support to [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
 
