@@ -26,11 +26,10 @@
 (require 'dired)
 (require 'all-the-icons)
 
-(defvar all-the-icons-dired-dir-face nil
-  "Face for the directory icon")
-
-;; (defvar all-the-icons-dired-file-face nil
-;;   "Face for the file icon")
+(defface all-the-icons-dired-dir-face
+  '((t (:foreground "black")))
+  "Face for the directory icon"
+  :group 'all-the-icons-faces)
 
 (defun dired-icon--get-files ()
   "List all files in the current dired buffer."
@@ -42,7 +41,7 @@
 	  (unless (member file '("." ".."))
 	    (let ((filename (dired-get-filename nil t)))
 	      (if (file-directory-p filename)
-		  (insert (concat (all-the-icons-octicon "file-directory" :v-adjust 0.01 :face all-the-icons-dired-dir-face) " "))
+		  (insert (concat (all-the-icons-octicon "file-directory" :v-adjust 0.01 :face 'all-the-icons-dired-dir-face) " "))
 		(insert (concat (all-the-icons-icon-for-file file :v-adjust 0.01 ;; :face all-the-icons-dired-file-face
 							     ) " ")))))))
       (forward-line 1))))
