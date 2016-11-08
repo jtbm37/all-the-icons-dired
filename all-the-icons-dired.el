@@ -59,8 +59,7 @@
       (progn
 	(add-hook 'dired-after-readin-hook 'all-the-icons-dired--display)
 	(when (eq major-mode 'dired-mode)
-	  (all-the-icons-dired--display))
-	(message "all-the-icons-dired-mode activated"))
+	  (all-the-icons-dired--display)))
     (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display)))
 
 (provide 'all-the-icons-dired)
