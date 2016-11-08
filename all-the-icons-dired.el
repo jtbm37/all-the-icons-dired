@@ -33,7 +33,7 @@
   "Face for the directory icon"
   :group 'all-the-icons-faces)
 
-(defun dired-icon--get-files ()
+(defun all-the-icons-dired--get-files ()
   "List all files in the current dired buffer."
   (save-excursion
     (goto-char (point-min))
@@ -44,14 +44,13 @@
 	    (let ((filename (dired-get-filename nil t)))
 	      (if (file-directory-p filename)
 		  (insert (concat (all-the-icons-octicon "file-directory" :v-adjust 0.01 :face 'all-the-icons-dired-dir-face) " "))
-		(insert (concat (all-the-icons-icon-for-file file :v-adjust 0.01 ;; :face all-the-icons-dired-file-face
-							     ) " ")))))))
+		(insert (concat (all-the-icons-icon-for-file file :v-adjust 0.01) " ")))))))
       (forward-line 1))))
 
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
   (let ((inhibit-read-only t))
-    (dired-icon--get-files)))
+    (all-the-icons-dired--get-files)))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
