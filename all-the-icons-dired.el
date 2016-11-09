@@ -38,6 +38,11 @@
   "Face for the directory icon"
   :group 'all-the-icons-faces)
 
+(defcustom all-the-icons-dired-v-adjust 0.01
+  "The default vertical adjustment of the icon in the dired buffer."
+  :group 'all-the-icons
+  :type 'number)
+
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
   (let ((inhibit-read-only t))
@@ -49,8 +54,8 @@
 	  (unless (member file '("." ".."))
 	    (let ((filename (dired-get-filename nil t)))
 	      (if (file-directory-p filename)
-		  (insert (concat (all-the-icons-octicon "file-directory" :v-adjust 0.01 :face 'all-the-icons-dired-dir-face) " "))
-		(insert (concat (all-the-icons-icon-for-file file :v-adjust 0.01) " ")))))))
+		  (insert (concat (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face) " "))
+		(insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " ")))))))
       (forward-line 1)))))
 
 ;;;###autoload
