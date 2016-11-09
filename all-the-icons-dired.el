@@ -3,6 +3,7 @@
 ;; Copyright (C) 2016  jtbm37
 
 ;; Author: jtbm37
+;; Version: 1.0
 ;; Keywords: icons, dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 
