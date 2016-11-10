@@ -70,7 +70,8 @@
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
-  (if t
+  :lighter " all-the-icons-dired-mode"
+  (if all-the-icons-dired-mode
       (progn
 	(add-hook 'dired-after-readin-hook 'all-the-icons-dired--display)
 	(when (eq major-mode 'dired-mode)
