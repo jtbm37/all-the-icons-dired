@@ -45,7 +45,8 @@
 
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
-  (let ((inhibit-read-only t))
+  (let ((inhibit-read-only t)
+	(remote-p (tramp-tramp-file-p default-directory)))
     (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
@@ -56,7 +57,7 @@
 	      (if (file-directory-p filename)
 		  (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
 			(icon (cond
-			       ((tramp-tramp-file-p default-directory)
+			       (remote-p
 				(all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
 			       ((file-symlink-p filename)
 				(all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
