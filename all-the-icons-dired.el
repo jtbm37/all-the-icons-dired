@@ -56,6 +56,8 @@
 	      (if (file-directory-p filename)
 		  (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
 			(icon (cond
+			       ((tramp-tramp-file-p default-directory)
+				(all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
 			       ((file-symlink-p filename)
 				(all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
 			       ((all-the-icons-dir-is-submodule filename)
