@@ -11,15 +11,27 @@ This adds dired support to [[https://github.com/domtronn/all-the-icons.el][all-t
 
 ** Installation
 
-   1) Clone the repo
+*** Manually
 
-   2) Add the cloned repo path to your load path
+    1) Clone the repo
 
-   #+BEGIN_SRC elisp
+    2) Add the cloned repo path to your load path
+
+    3) Add this snippet to your init.el
+
+    #+BEGIN_SRC elisp
 	(add-to-load-path (expand-file-name "~/path/to/all-the-icons-dired"))
 	(load "all-the-icons-dired.el")
-   #+END_SRC
+	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+    #+END_SRC
 
+*** From melpa
+    
+    1) Add this snippet to your init.el
+       #+BEGIN_SRC elisp
+	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+       #+END_SRC
+    
 ** Configuration
 
 *** Directory face
