@@ -20,17 +20,17 @@ This adds dired support to [[https://github.com/domtronn/all-the-icons.el][all-t
     3) Add this snippet to your init.el
 
     #+BEGIN_SRC elisp
-	(add-to-load-path (expand-file-name "~/path/to/all-the-icons-dired"))
-	(load "all-the-icons-dired.el")
-	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-to-load-path (expand-file-name "~/path/to/all-the-icons-dired"))
+(load "all-the-icons-dired.el")
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
     #+END_SRC
 
 *** From melpa
     
     1) Add this snippet to your init.el
-       #+BEGIN_SRC elisp
-	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-       #+END_SRC
+    #+BEGIN_SRC elisp
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+    #+END_SRC
     
 ** Configuration
 
