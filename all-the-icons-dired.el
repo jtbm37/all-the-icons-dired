@@ -84,11 +84,11 @@
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
-  (if all-the-icons-dired-mode
+  (if (and (display-graphic-p) all-the-icons-dired-mode)
       (progn
-	(add-hook 'dired-after-readin-hook 'all-the-icons-dired--display t t)
-	(when (eq major-mode 'dired-mode)
-	  (all-the-icons-dired--display)))
+        (add-hook 'dired-after-readin-hook 'all-the-icons-dired--display t t)
+        (when (eq major-mode 'dired-mode)
+          (all-the-icons-dired--display)))
     (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display t)
     (dired-revert)))
 
