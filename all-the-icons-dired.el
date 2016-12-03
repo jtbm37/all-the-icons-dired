@@ -50,7 +50,6 @@
   "Display the icons of files in a dired buffer."
   (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
     (setq-local all-the-icons-dired-displayed t)
-    (message "Displaying icons")
     (let ((inhibit-read-only t)
 	  (remote-p (tramp-tramp-file-p default-directory)))
       (save-excursion
