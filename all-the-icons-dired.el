@@ -34,7 +34,8 @@
 (require 'all-the-icons)
 
 (defface all-the-icons-dired-dir-face
-  '((t (:foreground "black")))
+  '((((background dark)) :foreground "white")
+    (((background light)) :foreground "black"))
   "Face for the directory icon"
   :group 'all-the-icons-faces)
 
