@@ -87,7 +87,7 @@
   (if (and (display-graphic-p) all-the-icons-dired-mode)
       (progn
         (add-hook 'dired-after-readin-hook 'all-the-icons-dired--display t t)
-        (when (eq major-mode 'dired-mode)
+        (when (derived-mode-p 'dired-mode)
           (all-the-icons-dired--display)))
     (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display t)
     (dired-revert)))
