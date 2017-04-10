@@ -52,7 +52,8 @@
   (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
     (setq-local all-the-icons-dired-displayed t)
     (let ((inhibit-read-only t)
-	  (remote-p (tramp-tramp-file-p default-directory)))
+	  (remote-p (and (fboundp 'tramp-tramp-file-p)
+                         (tramp-tramp-file-p default-directory))))
       (save-excursion
 	(goto-char (point-min))
 	(while (not (eobp))
