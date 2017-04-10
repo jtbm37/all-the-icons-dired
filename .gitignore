@@ -3,3 +3,7 @@
 
 # Packaging
 .cask
+
+# Emacs temp-files
+*~
+*#*
