@@ -4,7 +4,7 @@
 
 ;; Author: jtbm37
 ;; Version: 1.0
-;; Keywords: icons, dired
+;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -77,7 +77,7 @@
 	  (forward-line 1))))))
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
-  "Functions used as advice when redisplaying buffer"
+  "Functions used as advice when redisplaying buffer."
   (setq-local all-the-icons-dired-displayed nil))
 
 ;;;###autoload
