@@ -60,21 +60,22 @@
 	  (when (dired-move-to-filename nil)
 	    (let ((file (dired-get-filename 'verbatim t)))
 	      (unless (member file '("." ".."))
-		(let ((filename (dired-get-filename nil t)))
-		  (if (file-directory-p filename)
-		      (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
-			     (icon (cond
-				    (remote-p
-				     (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((file-symlink-p filename)
-				     (all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((all-the-icons-dir-is-submodule filename)
-				     (all-the-icons-octicon "file-submodule" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((file-exists-p (format "%s/.git" filename))
-				     (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    (t (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
-			(insert (concat icon " ")))
-		    (insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " ")))))))
+                (let ((filename (dired-get-filename nil t)))
+                  (when filename
+                    (if (file-directory-p filename)
+                        (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
+                               (icon (cond
+                                      (remote-p
+                                       (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+                                      ((file-symlink-p filename)
+                                       (all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+                                      ((all-the-icons-dir-is-submodule filename)
+                                       (all-the-icons-octicon "file-submodule" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+                                      ((file-exists-p (format "%s/.git" filename))
+                                       (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+                                      (t (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
+                          (insert (concat icon " ")))
+                      (insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " "))))))))
 	  (forward-line 1))))))
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
