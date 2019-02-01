@@ -50,15 +50,18 @@
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
   (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
-    (setq-local all-the-icons-dired-displayed t)
     (let ((inhibit-read-only t))
       (save-excursion
 	(goto-char (point-min))
 	(while (not (eobp))
-	  (when (dired-move-to-filename nil)
-            (let ((icon (all-the-icons-dired--icon-at-pos (point))))
-              (when icon
-	        (insert (concat icon " ")))))
+	  (when (and (dired-move-to-filename nil)
+                     (not (seq-some (lambda (ovr) (overlay-get ovr 'all-the-icons-dired))
+                                    (overlays-in (point) (point)))))
+            (let* ((icon (all-the-icons-dired--icon-at-pos (point)))
+                   (ovr (and icon (make-overlay (point) (point)))))
+              (when (and icon ovr)
+                (overlay-put ovr 'all-the-icons-dired t)
+                (overlay-put ovr 'before-string (concat icon " ")))))
 	  (forward-line 1))))))
 
 (defun all-the-icons-dired--icon-at-pos (pos)
@@ -90,7 +93,8 @@
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
   "Functions used as advice when redisplaying buffer."
-  (setq-local all-the-icons-dired-displayed nil))
+  (setq-local all-the-icons-dired-displayed nil)
+  (remove-overlays (point-min) (point-max) 'all-the-icons-dired t))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
