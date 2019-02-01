@@ -51,31 +51,42 @@
   "Display the icons of files in a dired buffer."
   (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
     (setq-local all-the-icons-dired-displayed t)
-    (let ((inhibit-read-only t)
-	  (remote-p (and (fboundp 'tramp-tramp-file-p)
-                         (tramp-tramp-file-p default-directory))))
+    (let ((inhibit-read-only t))
       (save-excursion
 	(goto-char (point-min))
 	(while (not (eobp))
 	  (when (dired-move-to-filename nil)
-	    (let ((file (dired-get-filename 'verbatim t)))
-	      (unless (member file '("." ".."))
-		(let ((filename (dired-get-filename nil t)))
-		  (if (file-directory-p filename)
-		      (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
-			     (icon (cond
-				    (remote-p
-				     (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((file-symlink-p filename)
-				     (all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((all-the-icons-dir-is-submodule filename)
-				     (all-the-icons-octicon "file-submodule" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    ((file-exists-p (format "%s/.git" filename))
-				     (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-				    (t (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
-			(insert (concat icon " ")))
-		    (insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " ")))))))
+            (let ((icon (all-the-icons-dired--icon-at-pos (point))))
+              (when icon
+	        (insert (concat icon " ")))))
 	  (forward-line 1))))))
+
+(defun all-the-icons-dired--icon-at-pos (pos)
+  "Return icon at POS."
+  (save-excursion
+    (goto-char pos)
+    (let ((local-filename (dired-get-filename 'verbatim t))
+          (filename (dired-get-filename nil t)))
+      (cond
+       ((member local-filename '("." ".."))
+        nil)
+       ((file-directory-p filename)
+        (let ((matcher (all-the-icons-match-to-alist local-filename all-the-icons-dir-icon-alist))
+              (remote-p (and (fboundp 'tramp-tramp-file-p)
+                             (tramp-tramp-file-p filename))))
+	      (cond
+	       (remote-p
+	        (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+	       ((file-symlink-p filename)
+	        (all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+	       ((all-the-icons-dir-is-submodule filename)
+	        (all-the-icons-octicon "file-submodule" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+	       ((file-exists-p (format "%s/.git" filename))
+	        (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
+	       (t
+                (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
+       (t
+        (all-the-icons-icon-for-file local-filename :v-adjust all-the-icons-dired-v-adjust))))))
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
   "Functions used as advice when redisplaying buffer."
