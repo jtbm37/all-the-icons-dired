@@ -44,12 +44,9 @@
   :group 'all-the-icons
   :type 'number)
 
-(defvar-local all-the-icons-dired-displayed nil
-  "Flags whether icons have been added.")
-
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
-  (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
+  (when dired-subdir-alist
     (let ((inhibit-read-only t))
       (save-excursion
 	(goto-char (point-min))
@@ -93,7 +90,6 @@
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
   "Functions used as advice when redisplaying buffer."
-  (setq-local all-the-icons-dired-displayed nil)
   (remove-overlays (point-min) (point-max) 'all-the-icons-dired t))
 
 ;;;###autoload
@@ -107,8 +103,6 @@
           (all-the-icons-dired--display)))
     (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display t)
     (dired-revert)))
-
-(advice-add 'dired-revert :before #'all-the-icons-dired--reset)
 
 (provide 'all-the-icons-dired)
 ;;; all-the-icons-dired.el ends here
