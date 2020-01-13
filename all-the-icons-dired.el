@@ -30,6 +30,8 @@
 
 
 ;;; Code:
+
+(require 'cl-lib)
 (require 'dired)
 (require 'all-the-icons)
 
@@ -46,6 +48,30 @@
 
 (defvar-local all-the-icons-dired-displayed nil
   "Flags whether icons have been added.")
+
+(defun all-the-icons-dired--add-overlay (pos string)
+  "Add overlay to display STRING at POS."
+  (let ((ov (make-overlay (1- pos) pos)))
+    (overlay-put ov 'all-the-icons-dired-overlay t)
+    (overlay-put ov 'after-string string)))
+
+(defun all-the-icons-dired--overlays-in (beg end)
+  "Get all all-the-icons-dired overlays between BEG to END."
+  (cl-remove-if-not
+   (lambda (ov)
+     (overlay-get ov 'all-the-icons-dired-overlay))
+   (overlays-in beg end)))
+
+(defun all-the-icons-dired--overlays-at (pos)
+  "Get all-the-icons-dired overlays at POS."
+  (apply #'all-the-icons-dired--overlays-in `(,pos ,pos)))
+
+(defun all-the-icons-dired--remove-all-overlays ()
+  "Remove all `all-the-icons-dired' overlays."
+  (save-restriction
+    (widen)
+    (mapc #'delete-overlay
+          (all-the-icons-dired--overlays-in (point-min) (point-max)))))
 
 (defun all-the-icons-dired--display ()
   "Display the icons of files in a dired buffer."
@@ -73,13 +99,14 @@
                                     ((file-exists-p (format "%s/.git" filename))
                                      (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
                                     (t (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
-                        (insert (concat icon " ")))
+                        (all-the-icons-dired--add-overlay (point) (concat icon " ")))
                     (insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " ")))))))
           (forward-line 1))))))
 
 (defun all-the-icons-dired--reset (&optional _arg _noconfirm)
   "Functions used as advice when redisplaying buffer."
-  (setq-local all-the-icons-dired-displayed nil))
+  (setq-local all-the-icons-dired-displayed nil)
+  (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
