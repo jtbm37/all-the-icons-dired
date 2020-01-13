@@ -46,9 +46,6 @@
   :group 'all-the-icons
   :type 'number)
 
-(defvar-local all-the-icons-dired-displayed nil
-  "Flags whether icons have been added.")
-
 (defun all-the-icons-dired--add-overlay (pos string)
   "Add overlay to display STRING at POS."
   (let ((ov (make-overlay (1- pos) pos)))
@@ -73,39 +70,41 @@
     (mapc #'delete-overlay
           (all-the-icons-dired--overlays-in (point-min) (point-max)))))
 
-(defun all-the-icons-dired--display ()
+(defun all-the-icons-dired--refresh ()
   "Display the icons of files in a dired buffer."
-  (when (and (not all-the-icons-dired-displayed) dired-subdir-alist)
-    (setq-local all-the-icons-dired-displayed t)
-    (let ((inhibit-read-only t)
-          (remote-p (and (fboundp 'tramp-tramp-file-p)
-                         (tramp-tramp-file-p default-directory))))
-      (save-excursion
-        (goto-char (point-min))
-        (while (not (eobp))
-          (when (dired-move-to-filename nil)
-            (let ((file (dired-get-filename 'verbatim t)))
-              (unless (member file '("." ".."))
-                (let ((filename (dired-get-filename nil t)))
-                  (if (file-directory-p filename)
-                      (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
-                             (icon (cond
-                                    (remote-p
-                                     (all-the-icons-octicon "file-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                    ((file-symlink-p filename)
-                                     (all-the-icons-octicon "file-symlink-directory" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                    ((all-the-icons-dir-is-submodule filename)
-                                     (all-the-icons-octicon "file-submodule" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                    ((file-exists-p (format "%s/.git" filename))
-                                     (all-the-icons-octicon "repo" :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                    (t (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
-                        (all-the-icons-dired--add-overlay (point) (concat icon " ")))
-                    (insert (concat (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust) " ")))))))
-          (forward-line 1))))))
+  (all-the-icons-dired--remove-all-overlays)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (let ((file (dired-get-filename 'verbatim t)))
+        (when file
+          (let ((icon (if (file-directory-p file)
+                          (all-the-icons-icon-for-dir file nil "")
+                        (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
+            (if (member file '("." ".."))
+                (all-the-icons-dired--add-overlay (point) "  ")
+              (all-the-icons-dired--add-overlay (point) (concat icon " "))))))
+      (dired-next-line 1))))
 
-(defun all-the-icons-dired--reset (&optional _arg _noconfirm)
+(defun all-the-icons-dired--refresh-advice (fn &rest args)
+  "Advice function for FN with ARGS."
+  (apply fn args)
+  (when (derived-mode-p 'dired-mode)
+    (all-the-icons-dired--refresh)))
+
+(defun all-the-icons-dired--setup ()
+  "Setup `all-the-icons-dired'."
+  (when (derived-mode-p 'dired-mode)
+    (add-hook 'dired-mode-hook 'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
+    (all-the-icons-dired--refresh)))
+
+(defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (setq-local all-the-icons-dired-displayed nil)
+  (remove-hook 'dired-mode-hook 'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
@@ -113,14 +112,8 @@
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
   (if (and (display-graphic-p) all-the-icons-dired-mode)
-      (progn
-        (add-hook 'dired-after-readin-hook 'all-the-icons-dired--display t t)
-        (when (derived-mode-p 'dired-mode)
-          (all-the-icons-dired--display)))
-    (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display t)
-    (dired-revert)))
-
-(advice-add 'dired-revert :before #'all-the-icons-dired--reset)
+      (all-the-icons-dired--setup)
+    (all-the-icons-dired--teardown)))
 
 (provide 'all-the-icons-dired)
 ;;; all-the-icons-dired.el ends here
