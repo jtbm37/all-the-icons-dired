@@ -95,14 +95,12 @@
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
   (when (derived-mode-p 'dired-mode)
-    (add-hook 'dired-mode-hook 'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (all-the-icons-dired--refresh)))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (remove-hook 'dired-mode-hook 'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
