@@ -95,6 +95,7 @@
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
   (when (derived-mode-p 'dired-mode)
+    (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
@@ -103,6 +104,7 @@
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
+  (advice-remove 'dired-readin #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
