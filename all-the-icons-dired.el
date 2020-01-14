@@ -46,6 +46,8 @@
   :group 'all-the-icons
   :type 'number)
 
+(defvar all-the-icons-dired-mode)
+
 (defun all-the-icons-dired--add-overlay (pos string)
   "Add overlay to display STRING at POS."
   (let ((ov (make-overlay (1- pos) pos)))
@@ -89,7 +91,7 @@
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
   (apply fn args)
-  (when (derived-mode-p 'dired-mode)
+  (when all-the-icons-dired-mode
     (all-the-icons-dired--refresh)))
 
 (defun all-the-icons-dired--setup ()
@@ -114,9 +116,10 @@
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
-  (if (and (display-graphic-p) all-the-icons-dired-mode)
-      (all-the-icons-dired--setup)
-    (all-the-icons-dired--teardown)))
+  (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
+    (if all-the-icons-dired-mode
+        (all-the-icons-dired--setup)
+      (all-the-icons-dired--teardown))))
 
 (provide 'all-the-icons-dired)
 ;;; all-the-icons-dired.el ends here
