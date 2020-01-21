@@ -47,8 +47,13 @@
 (defvar-local all-the-icons-dired-displayed nil
   "Flags whether icons have been added.")
 
+(defcustom all-the-icons-dired-icon-args nil
+  "Initial list of arguments passed to all-the-icons icon functions."
+  :group 'all-the-icons
+  :type 'sexp)
+
 (defun all-the-icons-dired--icon-for-filename (file filename &optional remote-p)
-  (let ((icon-args `(:v-adjust ,all-the-icons-dired-v-adjust))
+  (let ((icon-args `(,@all-the-icons-dired-icon-args :v-adjust ,all-the-icons-dired-v-adjust))
         icon-func icon-name)
     (if (file-directory-p filename)
         (progn
