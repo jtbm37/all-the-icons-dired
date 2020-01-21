@@ -81,6 +81,20 @@
   "Functions used as advice when redisplaying buffer."
   (setq-local all-the-icons-dired-displayed nil))
 
+(defun all-the-icons-dired--insert-subdir-icons (&rest _)
+  "insert icons for subdirectories in dired sessions."
+  (save-excursion
+    (unwind-protect
+        (progn
+          (narrow-to-region
+           (line-beginning-position)
+           (condition-case nil
+               (dired-next-subdir 1)
+             (error (point-max))))
+          (all-the-icons-dired--reset)
+          (all-the-icons-dired--display))
+      (widen))))
+
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
@@ -88,9 +102,12 @@
   (if (and (display-graphic-p) all-the-icons-dired-mode)
       (progn
         (add-hook 'dired-after-readin-hook 'all-the-icons-dired--display t t)
+        (advice-add 'dired-insert-subdir :after #'all-the-icons-dired--insert-subdir-icons)
+
         (when (derived-mode-p 'dired-mode)
           (all-the-icons-dired--display)))
     (remove-hook 'dired-after-readin-hook 'all-the-icons-dired--display t)
+    (advice-remove 'dired-insert-subdir #'all-the-icons-dired--insert-subdir-icons)
     (dired-revert)))
 
 (advice-add 'dired-revert :before #'all-the-icons-dired--reset)
