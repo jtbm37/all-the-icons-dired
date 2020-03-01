@@ -6,6 +6,7 @@
 ;; Version: 1.0
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
+;; URL: https://github.com/jtbm37/all-the-icons-dired
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
