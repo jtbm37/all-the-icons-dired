@@ -101,7 +101,7 @@
     (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-insert-subdir :after #'all-the-icons-dired--insert-subdir-icons)
+    (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
       (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
     (all-the-icons-dired--refresh)))
@@ -112,22 +112,8 @@
   (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--insert-subdir-icons)
+  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
-
-(defun all-the-icons-dired--insert-subdir-icons (&rest _)
-  "insert icons for subdirectories in dired sessions."
-  (save-excursion
-    (unwind-protect
-        (progn
-          (narrow-to-region
-           (line-beginning-position)
-           (condition-case nil
-               (dired-next-subdir 1)
-             (error (point-max))))
-          (all-the-icons-dired--reset)
-          (all-the-icons-dired--display))
-      (widen))))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
