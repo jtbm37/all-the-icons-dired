@@ -82,7 +82,9 @@
       (let ((file (dired-get-filename 'verbatim t)))
         (when file
           (let ((icon (if (file-directory-p file)
-                          (all-the-icons-icon-for-dir file :face 'all-the-icons-dired-dir-face)
+                          (all-the-icons-icon-for-dir file
+                                                      :face 'all-the-icons-dired-dir-face
+                                                      :v-adjust all-the-icons-dired-v-adjust)
                         (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
             (if (member file '("." ".."))
                 (all-the-icons-dired--add-overlay (point) "  ")
