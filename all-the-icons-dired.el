@@ -79,7 +79,7 @@
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
-      (let ((file (dired-get-filename 'verbatim t)))
+      (let ((file (dired-get-filename 'relative 'noerror)))
         (when file
           (let ((icon (if (file-directory-p file)
                           (all-the-icons-icon-for-dir file nil "")
