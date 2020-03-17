@@ -98,29 +98,29 @@
   (when all-the-icons-dired-mode
     (all-the-icons-dired--refresh)))
 
+(defvar all-the-icons-dired-advice-alist
+  '((dired-readin                . all-the-icons-dired--refresh-advice)
+    (dired-revert                . all-the-icons-dired--refresh-advice)
+    (dired-do-create-files       . all-the-icons-dired--refresh-advice)
+    (dired-do-kill-lines         . all-the-icons-dired--refresh-advice)
+    (dired-insert-subdir         . all-the-icons-dired--refresh-advice)
+    (dired-create-directory      . all-the-icons-dired--refresh-advice)
+    (dired-internal-do-deletions . all-the-icons-dired--refresh-advice)
+    (dired-narrow--internal      . all-the-icons-dired--refresh-advice))
+  "Alist of advice and advice functions.")
+
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
-  (setq-local tab-width 1)
-  (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-do-create-files :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
-  (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice)
-  (all-the-icons-dired--refresh))
+  (when (derived-mode-p 'dired-mode)
+    (setq-local tab-width 1)
+    (pcase-dolist (`(,sym . ,fn) all-the-icons-dired-advice-alist)
+      (advice-add sym :around fn))
+    (all-the-icons-dired--refresh)))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (advice-remove 'dired-readin #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-do-create-files #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-create-directory #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
+  (pcase-dolist (`(,sym . ,fn) all-the-icons-dired-advice-alist)
+    (advice-remove sym fn))
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
