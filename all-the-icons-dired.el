@@ -104,6 +104,8 @@
     (setq-local tab-width 1)
     (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-do-create-files :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
@@ -114,6 +116,8 @@
   "Functions used as advice when redisplaying buffer."
   (advice-remove 'dired-readin #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-do-create-files #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-create-directory #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
