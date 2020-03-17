@@ -85,8 +85,8 @@
                           (all-the-icons-icon-for-dir file nil "")
                         (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
             (if (member file '("." ".."))
-                (all-the-icons-dired--add-overlay (point) "  ")
-              (all-the-icons-dired--add-overlay (point) (concat icon " "))))))
+                (all-the-icons-dired--add-overlay (point) "  \t")
+              (all-the-icons-dired--add-overlay (point) (concat icon "\t"))))))
       (dired-next-line 1))))
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
@@ -98,6 +98,7 @@
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
   (when (derived-mode-p 'dired-mode)
+    (setq-local tab-width 1)
     (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
