@@ -100,17 +100,16 @@
 
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
-  (when (derived-mode-p 'dired-mode)
-    (setq-local tab-width 1)
-    (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-do-create-files :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice)
-    (all-the-icons-dired--refresh)))
+  (setq-local tab-width 1)
+  (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-do-create-files :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice)
+  (all-the-icons-dired--refresh))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
