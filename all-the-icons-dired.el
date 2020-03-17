@@ -107,8 +107,7 @@
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
-    (with-eval-after-load 'dired-narrow
-      (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
+    (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice)
     (all-the-icons-dired--refresh)))
 
 (defun all-the-icons-dired--teardown ()
