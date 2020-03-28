@@ -105,6 +105,7 @@
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
       (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
     (all-the-icons-dired--refresh)))
@@ -116,6 +117,7 @@
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
