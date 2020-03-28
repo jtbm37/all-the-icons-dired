@@ -47,6 +47,11 @@
   :group 'all-the-icons
   :type 'number)
 
+(defcustom all-the-icons-dired-monochrome t
+  "Whether to show the icons as the same color as the text on the same line."
+  :group 'all-the-icons
+  :type 'boolean)
+
 (defvar all-the-icons-dired-mode)
 
 (defun all-the-icons-dired--add-overlay (pos string)
@@ -86,7 +91,11 @@
                             (all-the-icons-icon-for-dir file
                                                         :face 'all-the-icons-dired-dir-face
                                                         :v-adjust all-the-icons-dired-v-adjust)
-                          (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
+                          (apply 'all-the-icons-icon-for-file file
+                                 (append
+                                  `(:v-adjust ,all-the-icons-dired-v-adjust)
+                                  (when all-the-icons-dired-monochrome
+                                    `(:face ,(face-at-point))))))))
               (if (member file '("." ".."))
                   (all-the-icons-dired--add-overlay (point) "  \t")
                 (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
