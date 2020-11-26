@@ -108,6 +108,7 @@
     (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-do-rename :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
       (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
     (all-the-icons-dired--refresh)))
@@ -121,6 +122,7 @@
   (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-create-directory #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-do-rename #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
