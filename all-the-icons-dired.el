@@ -42,6 +42,12 @@
   "Face for the directory icon"
   :group 'all-the-icons-faces)
 
+(defface all-the-icons-dired-file-face
+  '((((background dark)) :foreground "white")
+    (((background light)) :foreground "black"))
+  "Face for the f icon"
+  :group 'all-the-icons-faces)
+
 (defcustom all-the-icons-dired-v-adjust 0.01
   "The default vertical adjustment of the icon in the dired buffer."
   :group 'all-the-icons
@@ -86,7 +92,9 @@
                             (all-the-icons-icon-for-dir file
                                                         :face 'all-the-icons-dired-dir-face
                                                         :v-adjust all-the-icons-dired-v-adjust)
-                          (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
+                          (all-the-icons-icon-for-file file
+						       :face 'all-the-icons-dired-file-face
+						       :v-adjust all-the-icons-dired-v-adjust))))
               (if (member file '("." ".."))
                   (all-the-icons-dired--add-overlay (point) "  \t")
                 (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
