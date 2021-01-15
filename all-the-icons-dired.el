@@ -106,7 +106,9 @@ Icon overlays for dired buffers are only set up when this function returns non-n
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
   (apply fn args)
-  (when all-the-icons-dired-mode
+  (when (and all-the-icons-dired-mode
+             all-the-icons-dired-enabled-p
+             (funcall all-the-icons-dired-enabled-p))
     (all-the-icons-dired--refresh)))
 
 (defun all-the-icons-dired--setup ()
