@@ -47,6 +47,17 @@
   :group 'all-the-icons
   :type 'number)
 
+(defun all-the-icons-dired-default-enabled-p ()
+  "Only apply dired icons overlay "
+  (and (derived-mode-p 'dired-mode)
+       (display-graphic-p)))
+
+(defcustom all-the-icons-dired-enabled-p #'all-the-icons-dired-default-enabled-p
+  "A function used to assert whether icons are supported.
+Icon overlays for dired buffers are only set up when this function returns non-nil."
+  :group 'all-the-icons
+  :type 'function)
+
 (defvar all-the-icons-dired-mode)
 
 (defun all-the-icons-dired--add-overlay (pos string)
@@ -125,7 +136,8 @@
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
-  (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
+  (when (and all-the-icons-dired-enabled-p
+             (funcall all-the-icons-dired-enabled-p))
     (if all-the-icons-dired-mode
         (all-the-icons-dired--setup)
       (all-the-icons-dired--teardown))))
