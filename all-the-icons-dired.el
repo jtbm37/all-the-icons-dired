@@ -34,7 +34,6 @@
 
 (require 'cl-lib)
 (require 'dired)
-(require 'find-dired)
 (require 'all-the-icons)
 
 (defface all-the-icons-dired-dir-face
@@ -108,33 +107,33 @@
   (when all-the-icons-dired-mode
     (all-the-icons-dired--refresh)))
 
+(defvar all-the-icons-dired-advice-alist
+  '((dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-create-files        all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
+    (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
+    (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
+    (dired         dired-readin                 all-the-icons-dired--refresh-advice)
+    (dired         dired-revert                 all-the-icons-dired--refresh-advice)
+    (find-dired    find-dired-sentinel          all-the-icons-dired--refresh-advice))
+  "A list of file, adviced function, and advice function.")
+
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
-  (when (derived-mode-p 'dired-mode)
-    (setq-local tab-width 1)
-    (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-create-directory :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-do-rename :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'find-dired-sentinel :around #'all-the-icons-dired--refresh-advice)
-    (with-eval-after-load 'dired-narrow
-      (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
-    (all-the-icons-dired--refresh)))
+  (setq-local tab-width 1)
+  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
+    (with-eval-after-load file
+      (advice-add sym :around fn)))
+  (all-the-icons-dired--refresh))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (advice-remove 'dired-readin #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-create-directory #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-do-rename #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'find-dired-sentinel #'all-the-icons-dired--refresh-advice)
+  (kill-local-variable tab-width)
+  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
+    (with-eval-after-load file
+      (advice-remove sym fn)))
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
