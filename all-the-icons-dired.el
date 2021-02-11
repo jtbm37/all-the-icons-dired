@@ -141,7 +141,7 @@
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
-  (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
+  (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
         (all-the-icons-dired--setup)
       (all-the-icons-dired--teardown))))
