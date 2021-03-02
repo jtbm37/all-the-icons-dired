@@ -130,7 +130,7 @@
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (kill-local-variable tab-width)
+  (kill-local-variable 'tab-width)
   (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
     (with-eval-after-load file
       (advice-remove sym fn)))
