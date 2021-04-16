@@ -37,6 +37,7 @@
 (require 'cl-lib)
 (require 'dired)
 (require 'all-the-icons)
+(require 'subr-x)
 
 (defface all-the-icons-dired-dir-face
   '((((background dark)) :foreground "white")
