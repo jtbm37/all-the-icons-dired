@@ -142,7 +142,7 @@
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
-  "Display all-the-icons icon for each files in a dired buffer."
+  "Display all-the-icons icon for each file in a dired buffer."
   :lighter " all-the-icons-dired-mode"
   (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
