@@ -116,6 +116,7 @@
     (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
     (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
+    (dired         wdired-abort-changes         all-the-icons-dired--refresh-advice)
     (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
     (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
     (dired         dired-readin                 all-the-icons-dired--refresh-advice)
@@ -141,7 +142,7 @@
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
-  "Display all-the-icons icon for each files in a dired buffer."
+  "Display all-the-icons icon for each file in a dired buffer."
   :lighter " all-the-icons-dired-mode"
   (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
