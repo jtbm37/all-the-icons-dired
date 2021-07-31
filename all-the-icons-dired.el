@@ -119,6 +119,8 @@
     (dired         wdired-abort-changes         all-the-icons-dired--refresh-advice)
     (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
     (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
+    (dired-subtree dired-subtree-insert         all-the-icons-dired--refresh-advice)
+    (dired-subtree dired-subtree-remove         all-the-icons-dired--refresh-advice)
     (dired         dired-readin                 all-the-icons-dired--refresh-advice)
     (dired         dired-revert                 all-the-icons-dired--refresh-advice)
     (find-dired    find-dired-sentinel          all-the-icons-dired--refresh-advice))
