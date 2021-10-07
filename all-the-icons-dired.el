@@ -106,10 +106,9 @@
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
-  (let ((result (apply fn args)))
+  (prog1 (apply fn args)
     (when all-the-icons-dired-mode
-      (all-the-icons-dired--refresh))
-    result))
+      (all-the-icons-dired--refresh))))
 
 (defvar all-the-icons-dired-advice-alist
   '((dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
