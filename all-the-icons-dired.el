@@ -100,8 +100,8 @@
                                       (when all-the-icons-dired-monochrome
                                         `(:face ,(face-at-point))))))))
             (if (member file '("." ".."))
-                (all-the-icons-dired--add-overlay (point) "  \t")
-              (all-the-icons-dired--add-overlay (point) (concat icon "\t"))))))
+                (all-the-icons-dired--add-overlay (dired-move-to-filename) "  \t")
+              (all-the-icons-dired--add-overlay (dired-move-to-filename) (concat icon "\t"))))))
       (forward-line 1))))
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
@@ -111,7 +111,8 @@
       (all-the-icons-dired--refresh))))
 
 (defvar all-the-icons-dired-advice-alist
-  '((dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
+  '((dired         dired-do-redisplay           all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-create-files        all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
