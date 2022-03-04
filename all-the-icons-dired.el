@@ -111,7 +111,7 @@
       (all-the-icons-dired--refresh))))
 
 (defvar all-the-icons-dired-advice-alist
-  '((dired         dired-do-redisplay           all-the-icons-dired--refresh-advice)
+  '((dired-aux     dired-do-redisplay           all-the-icons-dired--refresh-advice)
     (dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-create-files        all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
