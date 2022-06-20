@@ -68,7 +68,8 @@
             (when all-the-icons-dired-monochrome
               `(:face ,(face-at-point)))))))
 
-(defun all-the-icons-dired--put-icon (pos) "Propertize POS with icon."
+(defun all-the-icons-dired--put-icon (pos)
+  "Propertize POS with icon."
        (let* ((file (dired-get-filename 'relative 'noerror))
               (icon (all-the-icons-dired--icon file)))
          (put-text-property (1- pos) pos 'display
