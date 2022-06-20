@@ -81,8 +81,8 @@
 They defualt to `(point-min)' and `(point-max)'."
   (let ((beg (or beg (point-min)))
         (end (or end (point-max))))
-    (with-silent-modifications
-      (ignore-errors
+    (when dired-subdir-alist
+      (with-silent-modifications
         (save-excursion
           (goto-char beg)
           (while (< (point) end)
