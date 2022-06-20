@@ -34,7 +34,6 @@
 
 ;;; Code:
 
-(require 'cl-lib)
 (require 'dired)
 (require 'all-the-icons)
 (require 'subr-x)
@@ -57,92 +56,50 @@
 
 (defvar all-the-icons-dired-mode)
 
-(defun all-the-icons-dired--add-overlay (pos string)
-  "Add overlay to display STRING at POS."
-  (let ((ov (make-overlay (1- pos) pos)))
-    (overlay-put ov 'all-the-icons-dired-overlay t)
-    (overlay-put ov 'after-string string)))
+(defun all-the-icons-dired--icon (file)
+  "Return the icon for FILE."
+  (if (file-directory-p file)
+      (all-the-icons-icon-for-dir file
+                                  :face 'all-the-icons-dired-dir-face
+                                  :v-adjust all-the-icons-dired-v-adjust)
+    (apply 'all-the-icons-icon-for-file file
+           (append
+            `(:v-adjust ,all-the-icons-dired-v-adjust)
+            (when all-the-icons-dired-monochrome
+              `(:face ,(face-at-point)))))))
 
-(defun all-the-icons-dired--overlays-in (beg end)
-  "Get all all-the-icons-dired overlays between BEG to END."
-  (cl-remove-if-not
-   (lambda (ov)
-     (overlay-get ov 'all-the-icons-dired-overlay))
-   (overlays-in beg end)))
+(defun all-the-icons-dired--put-icon (pos)
+  "Propertize POS with icon."
+       (let* ((file (dired-get-filename 'relative 'noerror))
+              (icon (all-the-icons-dired--icon file)))
+         (put-text-property (1- pos) pos 'display
+                            (if (member file '("." ".."))
+                                "    "
+                              (concat " " icon " ")))))
 
-(defun all-the-icons-dired--overlays-at (pos)
-  "Get all-the-icons-dired overlays at POS."
-  (apply #'all-the-icons-dired--overlays-in `(,pos ,pos)))
-
-(defun all-the-icons-dired--remove-all-overlays ()
-  "Remove all `all-the-icons-dired' overlays."
-  (save-restriction
-    (widen)
-    (mapc #'delete-overlay
-          (all-the-icons-dired--overlays-in (point-min) (point-max)))))
-
-(defun all-the-icons-dired--refresh ()
-  "Display the icons of files in a dired buffer."
-  (all-the-icons-dired--remove-all-overlays)
-  (save-excursion
-    (goto-char (point-min))
-    (while (not (eobp))
-      (when (dired-move-to-filename nil)
-        (let ((case-fold-search t))
-          (when-let* ((file (dired-get-filename 'relative 'noerror))
-                      (icon (if (file-directory-p file)
-                                (all-the-icons-icon-for-dir file
-                                                            :face 'all-the-icons-dired-dir-face
-                                                            :v-adjust all-the-icons-dired-v-adjust)
-                              (apply 'all-the-icons-icon-for-file file
-                                     (append
-                                      `(:v-adjust ,all-the-icons-dired-v-adjust)
-                                      (when all-the-icons-dired-monochrome
-                                        `(:face ,(face-at-point))))))))
-            (if (member file '("." ".."))
-                (all-the-icons-dired--add-overlay (dired-move-to-filename) "  \t")
-              (all-the-icons-dired--add-overlay (dired-move-to-filename) (concat icon "\t"))))))
-      (forward-line 1))))
-
-(defun all-the-icons-dired--refresh-advice (fn &rest args)
-  "Advice function for FN with ARGS."
-  (prog1 (apply fn args)
-    (when all-the-icons-dired-mode
-      (all-the-icons-dired--refresh))))
-
-(defvar all-the-icons-dired-advice-alist
-  '((dired-aux     dired-do-redisplay           all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-do-create-files        all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
-    (dired-aux     dired-kill-subdir            all-the-icons-dired--refresh-advice)
-    (dired         wdired-abort-changes         all-the-icons-dired--refresh-advice)
-    (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
-    (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
-    (dired-subtree dired-subtree-insert         all-the-icons-dired--refresh-advice)
-    (dired-subtree dired-subtree-remove         all-the-icons-dired--refresh-advice)
-    (dired         dired-readin                 all-the-icons-dired--refresh-advice)
-    (dired         dired-revert                 all-the-icons-dired--refresh-advice)
-    (find-dired    find-dired-sentinel          all-the-icons-dired--refresh-advice))
-  "A list of file, adviced function, and advice function.")
+(defun all-the-icons-dired--propertize (&optional beg end &rest _)
+  "Add icons using text properties from BEG to END.
+They defualt to `(point-min)' and `(point-max)'."
+  (let ((beg (or beg (point-min)))
+        (end (or end (point-max))))
+    (when dired-subdir-alist
+      (with-silent-modifications
+        (save-excursion
+          (goto-char beg)
+          (while (< (point) end)
+            (when-let ((pos (dired-move-to-filename)))
+              (all-the-icons-dired--put-icon pos))
+            (forward-line 1)))))))
 
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
-  (setq-local tab-width 1)
-  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
-    (with-eval-after-load file
-      (advice-add sym :around fn)))
-  (all-the-icons-dired--refresh))
+  (add-hook 'dired-after-readin-hook #'all-the-icons-dired--propertize)
+  (advice-add 'dired-insert-set-properties :before #'all-the-icons-dired--propertize))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (kill-local-variable 'tab-width)
-  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
-    (with-eval-after-load file
-      (advice-remove sym fn)))
-  (all-the-icons-dired--remove-all-overlays))
+  (remove-hook 'dired-after-readin-hook #'all-the-icons-dired--propertize)
+  (advice-remove 'dired-insert-set-properties #'all-the-icons-dired--propertize))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
