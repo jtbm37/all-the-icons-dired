@@ -70,12 +70,16 @@
 
 (defun all-the-icons-dired--put-icon (pos)
   "Propertize POS with icon."
-       (let* ((file (dired-get-filename 'relative 'noerror))
-              (icon (all-the-icons-dired--icon file)))
-         (put-text-property (1- pos) pos 'display
-                            (if (member file '("." ".."))
-                                "    "
-                              (concat " " icon " ")))))
+  (let* ((file (dired-get-filename 'relative 'noerror))
+         (icon (all-the-icons-dired--icon file))
+         (image (get-text-property 0 'display icon)))
+    (if (or (not (eq (car image) 'image)) (member file '("." "..")))
+        (put-text-property (1- pos) pos 'display
+                           (if (member file '("." ".."))
+                               "    "
+                             (concat " " icon " ")))
+      (setf (image-property image :margin) (cons (/ (window-text-width nil t) (window-text-width)) 0))
+      (put-text-property (1- pos) pos 'display image))))
 
 (defun all-the-icons-dired--propertize (&optional beg end &rest _)
   "Add icons using text properties from BEG to END.
