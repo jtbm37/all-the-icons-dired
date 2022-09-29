@@ -41,11 +41,11 @@
 (defface all-the-icons-dired-dir-face
   '((((background dark)) :foreground "white")
     (((background light)) :foreground "black"))
-  "Face for the directory icon"
+  "Face for the directory icon."
   :group 'all-the-icons-faces)
 
 (defcustom all-the-icons-dired-v-adjust 0.01
-  "The default vertical adjustment of the icon in the dired buffer."
+  "The default vertical adjustment of the icon in the Dired buffer."
   :group 'all-the-icons
   :type 'number)
 
@@ -82,9 +82,9 @@
       (put-text-property (1- pos) pos 'display image))))
 
 (defun all-the-icons-dired--fontify-region (start end &optional loudly)
-  "Add icons using text properties from BEG to END.
+  "Add icons using text properties from START to END.
 
-BEG, END and the optional argument LOUDLY is passed to
+START, END and the optional argument LOUDLY is passed to
 `font-lock-default-fontify-region'."
   (let ((extended-region (font-lock-default-fontify-region start end loudly)))
     (when (and (consp extended-region)
@@ -121,7 +121,7 @@ BEG, END and the optional argument LOUDLY is passed to
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
-  "Display all-the-icons icon for each file in a dired buffer."
+  "Display all-the-icons icon for each file in a Dired buffer."
   :lighter " all-the-icons-dired-mode"
   (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
