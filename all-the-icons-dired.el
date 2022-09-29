@@ -7,7 +7,7 @@
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 2.0
 ;; Keywords: files icons dired
-;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
+;; Package-Requires: ((emacs "26.1") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,10 @@
 (require 'dired)
 (require 'all-the-icons)
 (require 'subr-x)
+(require 'image)
+(require 'jit-lock)
+(require 'font-core)
+(require 'font-lock)
 
 (defface all-the-icons-dired-dir-face
   '((((background dark)) :foreground "white")
