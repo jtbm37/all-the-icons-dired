@@ -103,12 +103,21 @@ BEG, END and the optional argument LOUDLY is passed to
 (defun all-the-icons-dired--setup ()
   "Set up `all-the-icons-dired'."
   (add-function :override (local 'font-lock-fontify-region-function) #'all-the-icons-dired--fontify-region)
-  (setq-local font-lock-extra-managed-props (cons 'display font-lock-extra-managed-props)))
+  (setq-local font-lock-extra-managed-props (cons 'display font-lock-extra-managed-props))
+  (cond (jit-lock-mode
+         (jit-lock-refontify))
+        (font-lock-mode
+         (font-lock-fontify-region (point-min) (point-max)))))
 
 (defun all-the-icons-dired--teardown ()
   "Tear down `all-the-icons-dired'."
+  (font-lock-unfontify-buffer)
   (remove-function (local 'font-lock-fontify-region-function) #'all-the-icons-dired--fontify-region)
-  (setq-local font-lock-extra-managed-props (remove 'display font-lock-extra-managed-props)))
+  (setq-local font-lock-extra-managed-props (remove 'display font-lock-extra-managed-props))
+  (cond (jit-lock-mode
+         (jit-lock-refontify))
+        (font-lock-mode
+         (font-lock-fontify-region (point-min) (point-max)))))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
