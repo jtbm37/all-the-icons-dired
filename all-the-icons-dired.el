@@ -81,29 +81,34 @@
       (setf (image-property image :margin) (cons (/ (window-text-width nil t) (window-text-width)) 0))
       (put-text-property (1- pos) pos 'display image))))
 
-(defun all-the-icons-dired--propertize (&optional beg end &rest _)
+(defun all-the-icons-dired--fontify-region (start end &optional loudly)
   "Add icons using text properties from BEG to END.
-They defualt to `(point-min)' and `(point-max)'."
-  (let ((beg (or beg (point-min)))
-        (end (or end (point-max))))
-    (when dired-subdir-alist
-      (with-silent-modifications
-        (save-excursion
-          (goto-char beg)
-          (while (< (point) end)
-            (when-let ((pos (dired-move-to-filename)))
-              (all-the-icons-dired--put-icon pos))
-            (forward-line 1)))))))
+
+BEG, END and the optional argument LOUDLY is passed to
+`font-lock-default-fontify-region'."
+  (let ((extended-region (font-lock-default-fontify-region start end loudly)))
+    (when (and (consp extended-region)
+               (eq (car extended-region) 'jit-lock-bounds))
+      (setq start (cadr extended-region))
+      (setq end (cddr extended-region)))
+    (with-silent-modifications
+      (save-excursion
+        (goto-char start)
+        (while (< (point) end)
+          (when-let ((pos (dired-move-to-filename)))
+            (all-the-icons-dired--put-icon pos))
+          (forward-line 1))))
+    extended-region))
 
 (defun all-the-icons-dired--setup ()
-  "Setup `all-the-icons-dired'."
-  (add-hook 'dired-after-readin-hook #'all-the-icons-dired--propertize)
-  (advice-add 'dired-insert-set-properties :before #'all-the-icons-dired--propertize))
+  "Set up `all-the-icons-dired'."
+  (add-function :override (local 'font-lock-fontify-region-function) #'all-the-icons-dired--fontify-region)
+  (setq-local font-lock-extra-managed-props (cons 'display font-lock-extra-managed-props)))
 
 (defun all-the-icons-dired--teardown ()
-  "Functions used as advice when redisplaying buffer."
-  (remove-hook 'dired-after-readin-hook #'all-the-icons-dired--propertize)
-  (advice-remove 'dired-insert-set-properties #'all-the-icons-dired--propertize))
+  "Tear down `all-the-icons-dired'."
+  (remove-function (local 'font-lock-fontify-region-function) #'all-the-icons-dired--fontify-region)
+  (setq-local font-lock-extra-managed-props (remove 'display font-lock-extra-managed-props)))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
