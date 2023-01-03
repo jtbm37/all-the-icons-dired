@@ -42,6 +42,11 @@
   "Face for the directory icon"
   :group 'all-the-icons-faces)
 
+(defcustom all-the-icons-dired-lighter " all-the-icons-dired-mode"
+  "Lighter of all-the-icons-dired-mode"
+  :group 'all-the-icons
+  :type 'string)
+
 (defcustom all-the-icons-dired-v-adjust 0.01
   "The default vertical adjustment of the icon in the dired buffer."
   :group 'all-the-icons
@@ -124,7 +129,7 @@
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
-  :lighter " all-the-icons-dired-mode"
+  :lighter all-the-icons-dired-lighter
   (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
     (if all-the-icons-dired-mode
         (all-the-icons-dired--setup)
