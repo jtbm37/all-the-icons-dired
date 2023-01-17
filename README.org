@@ -1,6 +1,9 @@
 #+TITLE:	all-the-icons-dired
 #+AUTHOR:	jtbm37
 #+DATE:		2016-11-08
+** Note
+Since 2021-02-21, this is now the fork the =all-the-icons-dired= Melpa recipe points to. Changes can be seen [[https://github.com/jtbm37/all-the-icons-dired/compare/master...wyuenho:master][here]].
+
 [[file:logo.png]]
 
 This adds dired support to [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
